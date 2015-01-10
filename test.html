@@ -1,0 +1,15 @@
+<html><head><style>.hex {	float: left;font-family: "Courier New", Courier, monospace;	font-size: 13px;	color: #C6C;	margin-bottom:-13px;}.hex-row {clear:left;}div.hex-row:nth-of-type(even) {	margin-left:5px;}.hex-null {	float: left;	font-family: "Courier New", Courier, monospace;	font-size: 13px;	color: transparent;	margin-bottom:-13px;}
+</style><script type="text/javascript">var clickCount = 0;function readMouseMove(e) {currentCoords = document.getElementById('coords');currentCoords.innerHTML = getMouseCoords(e);div = document.getElementsByClassName('hex');for(var i=0; i < div.length; ++i) {	div[i].innerHTML="&#x2B22;"}div = document.getElementsByClassName('hex-null');for(var i=0; i < div.length; ++i) {	div[i].innerHTML="&#x2B22;"}}function readMouseClick(e) {clickCount+=1;click_result = document.getElementById('clicks');click_result.innerHTML = getMouseCoords(e);}function getMouseCoords(e) {return "<pre>("+e.clientX+", "+e.clientY+")</pre>";}document.onmousemove = readMouseMove;document.onclick = readMouseClick;</script></head><body><h2 id="clicks"></h2><h2 id="coords"></h2>
+<div class="hex-row">
+<div class="hex-null"></div><div class="hex-null"></div><div class="hex" id="1,-4"></div><div class="hex-null"></div></div>
+<div class="hex-row">
+<div class="hex-null"></div><div class="hex-null"></div><div class="hex" id="1,-3"></div><div class="hex" id="2,-3"></div></div>
+<div class="hex-row">
+<div class="hex-null"></div><div class="hex-null"></div><div class="hex-null"></div><div class="hex" id="2,-2"></div></div>
+<div class="hex-row">
+<div class="hex" id="-1,-1"></div><div class="hex" id="0,-1"></div><div class="hex" id="1,-1"></div><div class="hex-null"></div></div>
+<div class="hex-row">
+<div class="hex-null"></div><div class="hex" id="0,0"></div><div class="hex" id="1,0"></div><div class="hex-null"></div></div>
+<div class="hex-row">
+<div class="hex-null"></div><div class="hex" id="0,1"></div><div class="hex-null"></div><div class="hex-null"></div></div>
+</body></html>

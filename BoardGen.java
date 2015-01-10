@@ -46,7 +46,7 @@ public class BoardGen {
 					filled=true;
 				}
 			}
-			if(!(filled) && Math.random() > 0.1) {
+			if(!(filled)) {
 				tiles.add(new Hex(count++,x,y));
 			}
 		}
@@ -68,11 +68,48 @@ public class BoardGen {
 				ymax = hex.y;
 			}
 		}
-		for(Hex hex : tiles) {
-			System.out.println(hex.getName()+": ("+hex.x+", "+hex.y+")");
-		}
-		System.out.println("XMAX: " + xmax+" YMAX: " +ymax);
-		System.out.println("XMIN: " + xmin+" YMIN: " +ymin);
+		System.out.println("<html><head><style>.hex {"
++"	float: left;"
++"font-family: \"Courier New\", Courier, monospace;"
++"	font-size: 13px;"
++"	color: #C6C;"
++"	margin-bottom:-13px;"
++"}"
++".hex-row {"
++"clear:left;"
++"}"
++"div.hex-row:nth-of-type(even) {"
++"	margin-left:5px;"
++"}"
++".hex-null {"
++"	float: left;"
++"	font-family: \"Courier New\", Courier, monospace;"
++"	font-size: 13px;"
++"	color: transparent;"
++"	margin-bottom:-13px;"
++"}\n</style><script type=\"text/javascript\">"+"var clickCount = 0;"+
+"function readMouseMove(e) {"
+	+"currentCoords = document.getElementById('coords');"
+	+"currentCoords.innerHTML = getMouseCoords(e);"
+	+"div = document.getElementsByClassName('hex');" 
+	+"for(var i=0; i < div.length; ++i) {"
+	+"	div[i].innerHTML=\"&#x2B22;\""
+	+"}"
+	+"div = document.getElementsByClassName('hex-null');" 
+	+"for(var i=0; i < div.length; ++i) {"
+	+"	div[i].innerHTML=\"&#x2B22;\""
+	+"}"
++"}"
++"function readMouseClick(e) {"
+	+"clickCount+=1;"
+	+"click_result = document.getElementById('clicks');"
+	+"click_result.innerHTML = getMouseCoords(e);"
++"}"
++"function getMouseCoords(e) {"
+	+"return \"<pre>(\"+e.clientX+\", \"+e.clientY+\")</pre>\";"
++"}"
++"document.onmousemove = readMouseMove;"
++"document.onclick = readMouseClick;</script></head><body><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2>");
 
 		for(int i=ymin;i<=ymax;i++) {
 			System.out.println("<div class=\"hex-row\">");
@@ -81,15 +118,16 @@ public class BoardGen {
 				for(Hex hex : tiles) {
 					if(hex.x==j && hex.y==i) {
 						found=true;
-						System.out.println("<div class=\"hex\"></div> <!-- x="+j+" y="+i+" -->");
+						System.out.print("<div class=\"hex\" id=\""+j+","+i+"\"></div>");
 					}
 				}
 				if(!(found)) {
-					System.out.println("<div class=\"hex-null\"></div>");
+					System.out.print("<div class=\"hex-null\"></div>");
 				}
 			}
 			System.out.println("</div>");
 		}
+		System.out.println("</body></html>");
 	}
 }
 			
