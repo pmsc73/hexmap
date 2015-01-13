@@ -1,44 +1,97 @@
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.Random;
 
 public class BoardGen {
 	private static int count=0;
 
 	private static int x = 0;
 	private static int y = 0;
+	private static int rc,bc,gc,cc,yc,mc;
+	private static Random generator;
+	public static String randomColor(int size,int players) {
+		int roll = (int)(generator.nextDouble()*players);
+		int threshold = size/players;
+		
+	switch(roll) {
+		case 0:
+			if(rc>threshold) return randomColor(size,players);
+			rc++;
+			return "#E44";
+		case 1:
+			if(bc>threshold) return randomColor(size,players);
+			bc++;
+			return "#44E";
+		case 2:
+			if(gc>threshold) return randomColor(size,players);
+			gc++;
+			return "#4E4";
+		case 3:
+			if(yc>threshold) return randomColor(size,players);
+			yc++;
+			return "#EE4";
+		case 4:
+			if(mc>threshold) return randomColor(size,players);
+			mc++;
+			return "#E4E";
+		case 5:
+			if(cc>threshold) return randomColor(size,players);
+			cc++;
+			return "#4EE";
+		}
+		return "";
+	}
 	public static void nextCoords(int roll) {
-		boolean evenRow = (y%2==0);
+		boolean evenRow = (Math.abs(y)%2==0);
 		switch(roll) {
 		case 0:
-			x = (evenRow)? x:x+1;
-			y = y+1;
+			x = (evenRow)? x+1:x;
+			y = y-1;
 			break;
 		case 1:
 			x = x+1;
 			break;
 		case 2:
-			x = (evenRow)? x:x+1;
-			y=y-1;
+			x = (evenRow)? x+1:x;
+			y=y+1;
 			break;
 		case 3:
-			x = (evenRow)? x-1:x;
-			y=y-1;
+			x = (evenRow)? x:x-1;
+			y=y+1;
 			break;
 		case 4:
 			x=x-1;
 			break;
 		case 5:
-			x = (evenRow)? x-1:x;
-			y=y+1;
+			x = (evenRow)? x:x-1;
+			y=y-1;
 			break;
 		}
 	}		
+	public static String hexString(int dec) {
+		return "rgb("+dec+","+dec+","+dec+")";
+	}
 	public static void main(String args[]) {
 		ArrayList<Hex> tiles = new ArrayList<Hex>();
 		tiles.add(new Hex(count++,0,0));
+		String scale = "l";
+		if(args.length < 2) {
+			System.out.println("usage: java BoardGen tiles players [seed] [size=s|l] > out.html");
+			System.exit(1);
+		}
+		if(args.length >= 3) {
+			generator = new Random(Integer.parseInt(args[2]));
+		}
+		if(args.length == 4) {
+			scale=args[3];
+		}
+		else {
+			generator = new Random();
+		}
 		int size = Integer.parseInt(args[0]);
+		int players = Integer.parseInt(args[1]);
 		while(count<size) {
-			int roll = (int)(Math.random()*6);
+			int roll = (int)(generator.nextDouble()*6);
 			nextCoords(roll);
 			boolean filled = false;
 			for(Hex hex : tiles) {
@@ -47,7 +100,7 @@ public class BoardGen {
 				}
 			}
 			if(!(filled)) {
-				tiles.add(new Hex(count++,x,y));
+				tiles.add(new Hex((255*count++/size),x,y));
 			}
 		}
 		int xmin=Integer.MAX_VALUE;
@@ -68,51 +121,9 @@ public class BoardGen {
 				ymax = hex.y;
 			}
 		}
-		System.out.println("<html><head><style>.hex {"
-+"	float: left;"
-+"font-family: \"Courier New\", Courier, monospace;"
-+"	font-size: 64px;"
-+"	color: #C6C;"
-+"	margin-bottom:-49px;"
-+"  margin-left:-8px;"
-+"}"
-+".hex-row {"
-+"clear:left;"
-+"}"
-+"div.hex-row:nth-of-type(even) {"
-+"	margin-left:22px;"
-+"}"
-+".hex-null {"
-+"	float: left;"
-+"	font-family: \"Courier New\", Courier, monospace;"
-+"	font-size: 64px;"
-+"	color: transparent;"
-+"	margin-bottom:-49px;"
-+"  margin-left:-8px"
-+"}\n</style><script type=\"text/javascript\">"+"var clickCount = 0;"+
-"function readMouseMove(e) {"
-	+"currentCoords = document.getElementById('coords');"
-	+"currentCoords.innerHTML = getMouseCoords(e);"
-	+"div = document.getElementsByClassName('hex');" 
-	+"for(var i=0; i < div.length; ++i) {"
-	+"	div[i].innerHTML=\"&#x2B22;\""
-	+"}"
-	+"div = document.getElementsByClassName('hex-null');" 
-	+"for(var i=0; i < div.length; ++i) {"
-	+"	div[i].innerHTML=\"&#x2B22;\""
-	+"}"
-+"}"
-+"function readMouseClick(e) {"
-	+"clickCount+=1;"
-	+"click_result = document.getElementById('clicks');"
-	+"click_result.innerHTML = getMouseCoords(e);"
-+"}"
-+"function getMouseCoords(e) {"
-	+"return \"<pre>(\"+e.clientX+\", \"+e.clientY+\")</pre>\";"
-+"}"
-+"document.onmousemove = readMouseMove;"
-+"document.onclick = readMouseClick;</script></head><body><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2>");
-
+		String cssSource = (scale.equals("s"))? "hexS.css" : "hexL.css";
+		System.out.println("<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssSource+"\">"+"\n</head>\n<body><script type=\"text/javascript\"src=\"hex.js\"></script><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2><button id=\"start\" onclick=\"init()\">START</button>");
+		System.out.println("<div id=\"board\">");
 		for(int i=ymin;i<=ymax;i++) {
 			System.out.println("<div class=\"hex-row\">");
 			for(int j=xmin;j<=xmax;j++) {
@@ -120,15 +131,31 @@ public class BoardGen {
 				for(Hex hex : tiles) {
 					if(hex.x==j && hex.y==i) {
 						found=true;
-						System.out.print("<div class=\"hex\" id=\""+j+","+i+"\"></div>");
+						System.out.println("<div class=\"hex\" id=\""+j+","+i+"\""+" style=\"color:"+hexString(hex.id)+"\"></div>");
 					}
 				}
 				if(!(found)) {
-					System.out.print("<div class=\"hex-null\"></div>");
+					System.out.println("<div class=\"hex-null\"></div>");
 				}
 			}
 			System.out.println("</div>");
 		}
+		System.out.println("</div>");
+		int degreeSum=0;
+		for(Hex hex : tiles) {
+			int degree=0;
+			for(Hex other : tiles) {
+				if(hex != other) {
+					degree += (hex.isAdjacent(other))? 1 : 0;
+				}
+			}
+			degreeSum += degree;
+		}
+		System.out.println("<br/>");
+		System.out.println("<br/>");
+		System.out.println("<br/>");
+		System.out.println("<h2>Sum of degrees:"+degreeSum+"</h2>");
+		System.out.println("<h2>Average Degree:"+(float)(degreeSum)/tiles.size()+"</h2>");
 		System.out.println("</body></html>");
 	}
 }

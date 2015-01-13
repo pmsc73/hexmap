@@ -1,0 +1,28 @@
+ body {
+	color: #222;
+	background-color: #226;
+}
+ .hex {
+	float: left;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 13px;
+	margin-bottom:-11px; 
+	margin-left:-1px;
+}
+.hex-row {
+	clear:left;
+}
+div.hex-row:nth-of-type(even) {
+	margin-left:4px;
+}
+div.hex-null {
+	float: left;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 13px;
+	color: transparent;
+	margin-bottom:-11px;
+	margin-left:-1px
+}
+button {
+	color: #F00;
+}

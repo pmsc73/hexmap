@@ -4,6 +4,7 @@ public class Hex {
 	public int x;
 	public int y;
 	public int id;
+	public int roll;
 	public Hex(int id, int x, int y) {
 		this.x = x;
 		this.y = y;
