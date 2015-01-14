@@ -1,6 +1,6 @@
  body {
-	color: #222;
-	background-color: #944;
+	color: #EEE;
+	background-color: #404040;
 }
  .hex {
 	float: left;
@@ -19,10 +19,11 @@ div.hex-null {
 	float: left;
 	font-family: "Courier New", Courier, monospace;
 	font-size: 64px;
-	color: transparent;
+	color: #4a4a4a;
 	margin-bottom:-49px;
 	margin-left:-8px
 }
+
 button {
 	color: #F00;
 }

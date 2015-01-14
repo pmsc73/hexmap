@@ -1,28 +1,29 @@
  body {
-	color: #222;
-	background-color: #226;
+	color: #DDD;
+	background-color: #EEE;
 }
  .hex {
 	float: left;
 	font-family: "Courier New", Courier, monospace;
-	font-size: 13px;
-	margin-bottom:-11px; 
-	margin-left:-1px;
+	font-size: 5px;
+	margin-bottom:-2px; 
+	margin-left:0px;
 }
 .hex-row {
 	clear:left;
 }
 div.hex-row:nth-of-type(even) {
-	margin-left:4px;
+	margin-left:2px;
 }
 div.hex-null {
 	float: left;
 	font-family: "Courier New", Courier, monospace;
-	font-size: 13px;
+	font-size: 5px;
 	color: transparent;
-	margin-bottom:-11px;
-	margin-left:-1px
+	margin-bottom:-2px;
+	margin-left:0px
 }
+
 button {
 	color: #F00;
 }
