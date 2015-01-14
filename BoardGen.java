@@ -45,35 +45,37 @@ public class BoardGen {
 		boolean evenRow = (Math.abs(y)%2==0);
 		switch(roll) {
 		case 0:
-			x = (evenRow)? x+1:x;
+			x = (evenRow)? x:x+1;
 			y = y-1;
 			break;
 		case 1:
 			x = x+1;
 			break;
 		case 2:
-			x = (evenRow)? x+1:x;
+			x = (evenRow)? x:x+1;
 			y=y+1;
 			break;
 		case 3:
-			x = (evenRow)? x:x-1;
+			x = (evenRow)? x-1:x;
 			y=y+1;
 			break;
 		case 4:
 			x=x-1;
 			break;
 		case 5:
-			x = (evenRow)? x:x-1;
+			x = (evenRow)? x-1:x;
 			y=y-1;
 			break;
 		}
 	}		
 	public static String hexString(int dec) {
-		return "rgb("+dec+","+dec+","+dec+")";
+		if(dec==0) return "F00";
+		return "rgb(0,"+dec+",0)";
+		
 	}
 	public static void main(String args[]) {
 		ArrayList<Hex> tiles = new ArrayList<Hex>();
-		tiles.add(new Hex(count++,0,0));
+		tiles.add(new Hex(6,count++,0,0));
 		String scale = "l";
 		if(args.length < 2) {
 			System.out.println("usage: java BoardGen tiles players [seed] [size=s|l] > out.html");
@@ -100,7 +102,7 @@ public class BoardGen {
 				}
 			}
 			if(!(filled)) {
-				tiles.add(new Hex((255*count++/size),x,y));
+				tiles.add(new Hex(roll,(255*count++/size),x,y));
 			}
 		}
 		int xmin=Integer.MAX_VALUE;
@@ -121,17 +123,24 @@ public class BoardGen {
 				ymax = hex.y;
 			}
 		}
+		System.out.println("<h1>"+ymin+"..."+ymax+"</h2>");
 		String cssSource = (scale.equals("s"))? "hexS.css" : "hexL.css";
 		System.out.println("<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssSource+"\">"+"\n</head>\n<body><script type=\"text/javascript\"src=\"hex.js\"></script><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2><button id=\"start\" onclick=\"init()\">START</button>");
-		System.out.println("<div id=\"board\">");
+		
+		System.out.println("<div class=\"board\">");
+		
+		if(((Math.abs(ymin)) % 2)== 1)
+			System.out.println("<div class=\"hex-row\"></div>");
+			
 		for(int i=ymin;i<=ymax;i++) {
+			
 			System.out.println("<div class=\"hex-row\">");
 			for(int j=xmin;j<=xmax;j++) {
 				boolean found=false;
 				for(Hex hex : tiles) {
 					if(hex.x==j && hex.y==i) {
 						found=true;
-						System.out.println("<div class=\"hex\" id=\""+j+","+i+"\""+" style=\"color:"+hexString(hex.id)+"\"></div>");
+						System.out.println("<div class=\"hex\" id=\""+j+","+i+"\""+" style=\"color:"+hexString(hex.id)+"\">"+hex.roll+"</div>");
 					}
 				}
 				if(!(found)) {

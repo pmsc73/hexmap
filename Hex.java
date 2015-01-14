@@ -5,7 +5,8 @@ public class Hex {
 	public int y;
 	public int id;
 	public int roll;
-	public Hex(int id, int x, int y) {
+	public Hex(int roll, int id, int x, int y) {
+		this.roll = roll;
 		this.x = x;
 		this.y = y;
 		this.id = id;
