@@ -123,14 +123,12 @@ public class BoardGen {
 				ymax = hex.y;
 			}
 		}
-		System.out.println("<h1>"+ymin+"..."+ymax+"</h2>");
-		String cssSource = (scale.equals("s"))? "hexS.css" : "hexL.css";
-		System.out.println("<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssSource+"\">"+"\n</head>\n<body><script type=\"text/javascript\"src=\"hex.js\"></script><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2><button id=\"start\" onclick=\"init()\">START</button>");
+		System.out.println("<html><head>\n</head>\n<body><script type=\"text/javascript\" src=\"hex.js\"></script><h2 id=\"clicks\"></h2><h2 id=\"coords\"></h2>");
 		
 		System.out.println("<div class=\"board\">");
-		
+		int ypar=0;
 		if(((Math.abs(ymin)) % 2)== 1)
-			System.out.println("<div class=\"hex-row\"></div>");
+			ypar=1;
 			
 		for(int i=ymin;i<=ymax;i++) {
 			
@@ -140,17 +138,18 @@ public class BoardGen {
 				for(Hex hex : tiles) {
 					if(hex.x==j && hex.y==i) {
 						found=true;
-						System.out.println("<div class=\"hex\" id=\""+j+","+i+"\""+" style=\"color:"+hexString(hex.id)+"\">"+hex.roll+"</div>");
+						System.out.println("<div class=\"hex\" data-x=\""+(j-xmin)+"\" data-y=\""+(i-ymin-ypar)+"\">&#x2B22;</div>");
+						System.out.println("<div class=\"label\" data-x=\""+(j-xmin)+"\" data-y=\""+(i-ymin-ypar)+"\">"+hex.roll+"</div>");
+						
 					}
-				}
-				if(!(found)) {
-					System.out.println("<div class=\"hex-null\"></div>");
 				}
 			}
 			System.out.println("</div>");
 		}
 		System.out.println("</div>");
-		int degreeSum=0;
+		double degreeSum=0;
+		double degreeDev=0;
+		ArrayList<Hex> redundancies = new ArrayList<Hex>();
 		for(Hex hex : tiles) {
 			int degree=0;
 			for(Hex other : tiles) {
@@ -160,12 +159,19 @@ public class BoardGen {
 			}
 			degreeSum += degree;
 		}
-		System.out.println("<br/>");
-		System.out.println("<br/>");
-		System.out.println("<br/>");
-		System.out.println("<h2>Sum of degrees:"+degreeSum+"</h2>");
-		System.out.println("<h2>Average Degree:"+(float)(degreeSum)/tiles.size()+"</h2>");
-		System.out.println("</body></html>");
+		double variance=0;
+		for(Hex hex : tiles) {
+			int degree=0;
+			for(Hex other : tiles) {
+				if(hex != other) {
+					degree += (hex.isAdjacent(other))? 1 : 0;
+				}
+			}
+			double squareDiff = degree - (degreeSum/tiles.size());
+			squareDiff = Math.pow(squareDiff,2);
+			variance+=squareDiff;
+		}
+		variance /= tiles.size();
 	}
 }
 			
